@@ -11,13 +11,14 @@ let leftPressed = false;
 let rightPressed = false;
 
 class Player {
-  constructor({ position, velocity, radius, width, height, color }) {
+  constructor({ position, velocity, radius, width, height, color, text }) {
     this.position = position;
     this.velocity = velocity;
     this.radius = radius;
     this.width = width;
     this.height = height;
     this.color = color;
+    this.text = text;
   }
 
   draw() {
@@ -26,6 +27,15 @@ class Player {
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText(
+      this.text,
+      this.position.x - 10,
+      this.position.y + 10,
+      this.width
+    );
   }
 
   update() {
@@ -115,7 +125,9 @@ function animate() {
   player.update();
 
   frames++;
-  //   console.log(frames);
+  player.text = "";
+  if (eatingPhase) player.text = "Eat!";
+
   if (frames % 100 === 0) {
     enemies.push(
       new Enemy({
@@ -144,9 +156,31 @@ function animate() {
       enemies.splice(enemies.indexOf(enemy), 1);
       player.radius -= 10;
       if (player.radius <= 9) {
-        alert("Game Over");
-        player.radius = 100;
-        enemies = [];
+        const p = document.createElement("p");
+        p.innerText = "Game Over!";
+        document.body.appendChild(p);
+        p.style.position = "absolute";
+        p.style.top = "42%";
+        p.style.left = "50%";
+        p.style.transform = "translate(-50%, -50%)";
+        p.style.fontSize = "50px";
+        p.style.color = "orange";
+        player.radius = -1000;
+        const button = document.createElement("button");
+        button.innerText = "Restart";
+        document.body.appendChild(button);
+        button.style.position = "absolute";
+        button.style.top = "62%";
+        button.style.left = "50%";
+        button.style.transform = "translate(-50%, -50%)";
+        button.style.fontSize = "50px";
+        button.style.color = "orange";
+        button.style.borderRadius = "15px";
+        button.addEgventListener("click", () => {
+          location.reload();
+        });
+        // not sure if this is necessary
+        cancelAnimationFrame(animate);
       }
     }
     if (
@@ -161,7 +195,6 @@ function animate() {
     }
   });
 
-  console.log(frames);
   if (frames % 1500 === 0) {
     player.color = "white";
     frames = 0;
@@ -183,17 +216,17 @@ function animate() {
 animate();
 
 addEventListener("keydown", (e) => {
-  if (e.key === "w") upPressed = true;
-  if (e.key === "s") downPressed = true;
-  if (e.key === "a") leftPressed = true;
-  if (e.key === "d") rightPressed = true;
+  if (e.key === "w" || e.key == "ArrowUp") upPressed = true;
+  if (e.key === "s" || e.key == "ArrowDown") downPressed = true;
+  if (e.key === "a" || e.key == "ArrowLeft") leftPressed = true;
+  if (e.key === "d" || e.key == "ArrowRight") rightPressed = true;
 });
 
 addEventListener("keyup", (e) => {
-  if (e.key === "w") upPressed = false;
-  if (e.key === "s") downPressed = false;
-  if (e.key === "a") leftPressed = false;
-  if (e.key === "d") rightPressed = false;
+  if (e.key === "w" || e.key == "ArrowUp") upPressed = false;
+  if (e.key === "s" || e.key == "ArrowDown") downPressed = false;
+  if (e.key === "a" || e.key == "ArrowLeft") leftPressed = false;
+  if (e.key === "d" || e.key == "ArrowRight") rightPressed = false;
 });
 
 addEventListener("resize", () => {
