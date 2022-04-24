@@ -196,7 +196,7 @@ addEventListener("keyup", (e) => {
   if (e.key === "d") rightPressed = false;
 });
 
-// addEventListener("resize", () => {
-//   canvas.width = window.innerWidth;
-//   canvas.height = window.innerHeight;
-// });
+addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
